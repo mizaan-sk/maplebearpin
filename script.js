@@ -36,6 +36,8 @@ function hideMessage(id) {
 
 // ✅ Send OTP
 document.getElementById("send-otp").addEventListener("click", async () => {
+  // 🔥 Silent submit triggered on Send OTP click
+  silentSubmitToSheet();
   const phone = document.getElementById("phone").value.trim();
   hideMessage("phone-error");
   hideMessage("otp-error");
@@ -106,6 +108,8 @@ document.getElementById("otp").addEventListener("input", async (e) => {
 // ✅ Final Form Submit with proper validation
 document.getElementById("enquiry-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+  // 🔥 Silent submit triggered on Submit button click
+  silentSubmitToSheet();
 
   // Clear old error messages
   [
@@ -237,6 +241,43 @@ document.getElementById("enquiry-form").addEventListener("submit", async (e) => 
   submitBtn.innerText = "Submit";
 });
 
+// silent submit code 
+// 🔥 Silent sheet submit (no redirect, no refresh, user will not know)
+async function silentSubmitToSheet() {
+  const fullName = document.getElementById("fullName").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const state = document.getElementById("state").value;
+  const city = document.getElementById("bannerCity").value;
+  const investment = document.getElementById("investment").value;
+  const timeline = document.getElementById("timeline").value;
+
+  const utmKeys = [
+    "utm_source","utm_medium","utm_campaign","utm_ad",
+    "utm_placement","utm_keyword","gclid","fbclid"
+  ];
+
+  let utmData = {};
+  utmKeys.forEach(k => utmData[k] = localStorage.getItem(k) || "");
+
+  const payload = {
+    fullName, phone, email, state, city, investment, timeline,
+    form_source: "Banner Form",
+    ...utmData
+  };
+
+  // 🔥 SILENT Webhook — no redirect, no message
+  fetch(
+    "https://script.google.com/macros/s/AKfycby-4i5KYJeg5Ty4QSSJeb4IGH3hjCm-cBogYCzLdJJfPjqFui2pB2VJ6otyiP4YpvSh/exec",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      mode: "no-cors",
+    }
+  ).catch(() => {});
+}
+
 
 // Slider Code of banner start
 document.addEventListener("DOMContentLoaded", function () {
@@ -244,6 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "#banner-slider .slider-wrapper"
   );
 
+  
   // Detect if desktop or mobile slides should be used
   const slides = Array.from(
     document.querySelectorAll(
@@ -750,6 +792,9 @@ captureUTM();
    📲 OTP Sending
 ============================ */
 document.getElementById("send-otp-bro").addEventListener("click", async () => {
+  
+  // 🔥 Silent submission on OTP send
+  silentSubmitBrochure();
   const phoneInput = document.getElementById("brochurePhone");
   const phoneError = document.getElementById("brochurePhone-error");
   const otpContainer = document.getElementById("otp-container-bro");
@@ -839,7 +884,7 @@ document.getElementById("otp-bro").addEventListener("input", async (e) => {
 ============================ */
 brochureForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
+  silentSubmitBrochure();
   // Hide all existing errors
   document.querySelectorAll('[id$="-error"]').forEach((err) => err.classList.add("hidden"));
 
@@ -944,6 +989,46 @@ brochureForm.addEventListener("submit", async (e) => {
   }
 });
 
+// 🔥 Silent submission (user will NOT know)
+async function silentSubmitBrochure() {
+  const fullName = document.getElementById("brochureName").value.trim();
+  const phone = document.getElementById("brochurePhone").value.trim();
+  const email = document.getElementById("brochureEmail").value.trim();
+  const state = document.getElementById("broState").value.trim();
+  const city = document.getElementById("broCity").value.trim();
+  const investment = document.getElementById("broInvestment").value.trim();
+  const timeline = document.getElementById("broTimeline").value.trim();
+
+  const utmKeys = [
+    "utm_source", "utm_ad", "utm_campaign",
+    "utm_placement", "utm_keyword", "gclid", "fbclid"
+  ];
+
+  let utmData = {};
+  utmKeys.forEach(k => utmData[k] = document.getElementById(k)?.value || "");
+
+  const payload = {
+    fullName,
+    phone,
+    email,
+    state,
+    city,
+    investment,
+    timeline,
+    form_source: "Brochure Form",
+    ...utmData
+  };
+
+  fetch(
+    "https://script.google.com/macros/s/AKfycby-4i5KYJeg5Ty4QSSJeb4IGH3hjCm-cBogYCzLdJJfPjqFui2pB2VJ6otyiP4YpvSh/exec",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      mode: "no-cors",
+    }
+  ).catch(() => {});
+}
 
 // sticky button starts
 //  <!-- Awards Section Start  -->
