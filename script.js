@@ -53,7 +53,7 @@ document.getElementById("send-otp").addEventListener("click", async () => {
   try {
     const res = await fetch("otp.php", { method: "POST", body: formData });
     const data = await res.json();
-    console.log("OTP Response:", data);
+    // console.log("OTP Response:", data);
 
     if (data.status === "success") {
       otpSent = true;
@@ -81,7 +81,7 @@ document.getElementById("otp").addEventListener("input", async (e) => {
         body: "otp=" + encodeURIComponent(otp),
       });
       const data = await res.json();
-      console.log("Auto Verify Response:", data);
+      // console.log("Auto Verify Response:", data);
 
       if (data.status === "success") {
         otpVerifieds = true;
@@ -217,7 +217,7 @@ document.getElementById("enquiry-form").addEventListener("submit", async (e) => 
       body: JSON.stringify(payload),
     });
     const data = await res.json();
-    console.log("Submit Response:", data);
+    // console.log("Submit Response:", data);
 
     if (data.status === "success") {
       statusMessage.classList.remove("text-blue-600");
