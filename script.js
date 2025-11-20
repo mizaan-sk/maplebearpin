@@ -251,7 +251,9 @@ async function silentSubmitToSheet() {
   const city = document.getElementById("bannerCity").value;
   const investment = document.getElementById("investment").value;
   const timeline = document.getElementById("timeline").value;
-
+const ipResponse = await fetch("https://api.ipify.org?format=json");
+  const ipData = await ipResponse.json();
+  const userIP = ipData.ip || "";
   const utmKeys = [
     "utm_source","utm_medium","utm_campaign","utm_ad",
     "utm_placement","utm_keyword","gclid","fbclid"
@@ -261,7 +263,7 @@ async function silentSubmitToSheet() {
   utmKeys.forEach(k => utmData[k] = localStorage.getItem(k) || "");
 
   const payload = {
-    fullName, phone, email, state, city, investment, timeline,
+    fullName, phone, email, state, city, investment, timeline,userIP,
     form_source: "Banner Form",
     ...utmData
   };
@@ -998,7 +1000,9 @@ async function silentSubmitBrochure() {
   const city = document.getElementById("broCity").value.trim();
   const investment = document.getElementById("broInvestment").value.trim();
   const timeline = document.getElementById("broTimeline").value.trim();
-
+const ipResponse = await fetch("https://api.ipify.org?format=json");
+  const ipData = await ipResponse.json();
+  const userIP = ipData.ip || "";
   const utmKeys = [
     "utm_source", "utm_ad", "utm_campaign",
     "utm_placement", "utm_keyword", "gclid", "fbclid"
@@ -1015,6 +1019,7 @@ async function silentSubmitBrochure() {
     city,
     investment,
     timeline,
+    userIP,
     form_source: "Brochure Form",
     ...utmData
   };
